@@ -4,17 +4,14 @@ from urllib.parse import urlencode
 from parsers.utils import convert_binance_time_to_normal, convert_normal_time_to_binance
 
 
-def get_currency_data(currency_code: str, year: int) -> [dict] or None:
+def get_currency_data(currency_code: str, date_from: str, date_to: str) -> [dict] or None:
     request_url = 'https://api.binance.com/api/v3/klines?'
-
-    year_start = str(year) + '-01-01 00:00:00'
-    year_end = str(year + 1) + '-01-01 00:00:00'
 
     request_params = {
         'symbol': currency_code + 'USDT',
         'interval': '1d',
-        'startTime': convert_normal_time_to_binance(year_start),
-        'endTime': convert_normal_time_to_binance(year_end)
+        'startTime': convert_normal_time_to_binance(date_from),
+        'endTime': convert_normal_time_to_binance(date_to)
     }
 
     response = requests.get(request_url + urlencode(request_params))
@@ -30,7 +27,7 @@ def get_currency_data(currency_code: str, year: int) -> [dict] or None:
 
         result.append({
             'date': date,
-            currency_code: price
+            currency_code + '_price_USD': price
         })
 
     return result

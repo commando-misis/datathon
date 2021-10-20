@@ -15,7 +15,7 @@ def get_currency_id(currency_code: str) -> int or None:
     return None
 
 
-def get_currency_data(currency_code: str, year: int) -> [dict] or None:
+def get_currency_data(currency_code: str, date_from: str, date_to: str, convertation: str = 'USD') -> [dict] or None:
     currency_id = get_currency_id(currency_code)
 
     if currency_id is None:
@@ -24,9 +24,9 @@ def get_currency_data(currency_code: str, year: int) -> [dict] or None:
     request_url = 'https://web-api.coinmarketcap.com/v1/cryptocurrency/ohlcv/historical?'
     request_params = {
         'id': currency_id,
-        'convert': 'USD',
-        'time_start': str(year) + '-01-01',
-        'time_end': str(year) + '-12-31'
+        'convert': convertation,
+        'time_start': date_from,
+        'time_end': date_to
     }
 
     response = requests.get(request_url + urlencode(request_params))
@@ -38,8 +38,8 @@ def get_currency_data(currency_code: str, year: int) -> [dict] or None:
     result = []
     for day_data in response.json()['data']['quotes']:
         result.append({
-            'date': day_data['time_open'].replace('T', ' ').replace('.000Z', ''),
-            currency_code: day_data['quote']['USD']['close']
+            'date': day_data['time_open'].split('T')[0],
+            currency_code + '_price_' + convertation: day_data['quote'][convertation]['close']
         })
 
     return result
