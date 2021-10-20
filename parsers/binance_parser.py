@@ -4,7 +4,7 @@ from urllib.parse import urlencode
 from parsers.utils import convert_binance_time_to_normal, convert_normal_time_to_binance
 
 
-def get_currency_data(currency_code: str, year: int) -> [dict]:
+def get_currency_data(currency_code: str, year: int) -> [dict] or None:
     request_url = 'https://api.binance.com/api/v3/klines?'
 
     year_start = str(year) + '-01-01 00:00:00'
