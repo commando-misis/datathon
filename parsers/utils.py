@@ -1,10 +1,13 @@
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
+from datetime import datetime, timedelta
 
 
-def convert_binance_time_to_normal(time: int) -> str:
-    return (datetime.fromtimestamp(time/1000) - relativedelta(hours=3)).strftime('%Y-%m-%d')
+def convert_binance_time_to_normal(timestamp: int) -> str:
+    return (datetime.fromtimestamp(timestamp/1000) - timedelta(hours=3)).strftime('%Y-%m-%d')
 
 
-def convert_normal_time_to_binance(time: str) -> int:
-    return int((datetime.strptime(time, '%Y-%m-%d') - relativedelta(hours=3)).timestamp() * 1000)
+def convert_normal_time_to_binance(date: str) -> int:
+    return int((datetime.strptime(date, '%Y-%m-%d') - timedelta(hours=3)).timestamp() * 1000)
+
+
+def minus_one_day(date: str) -> str:
+    return (datetime.strptime(date, '%Y-%m-%d') - timedelta(days=1)).strftime('%Y-%m-%d')

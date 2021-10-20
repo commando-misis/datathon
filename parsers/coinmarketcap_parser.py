@@ -1,6 +1,7 @@
 import requests
 
 from urllib.parse import urlencode
+from parsers.utils import minus_one_day
 
 
 def get_currency_id(currency_code: str) -> int or None:
@@ -25,7 +26,7 @@ def get_currency_data(currency_code: str, date_from: str, date_to: str, converta
     request_params = {
         'id': currency_id,
         'convert': convertation,
-        'time_start': date_from,
+        'time_start': minus_one_day(date_from),
         'time_end': date_to
     }
 
