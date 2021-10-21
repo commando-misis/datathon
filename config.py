@@ -10,5 +10,5 @@ currency_codes_x_names_dict = {
     'USDT': 'Tether',
     'ADA': 'Cardano',
     'XRP': 'Proton',
-    'SOL': 'Solenium'
+    'SOL': 'Solana'
 }
