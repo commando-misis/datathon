@@ -4,12 +4,7 @@ import pandas as pd
 from parsers import coinmarketcap_parser
 from glob import glob
 from datetime import datetime, timedelta
-
-
-global_currency_codes = ['BTC', 'ETH', 'BNB', 'ADA', 'USDT', 'XRP', 'SOL']
-global_convertation_codes = ['USD', 'RUB', 'BTC']
-global_date_from = '2020-05-01'
-global_date_to = '2020-05-31'
+from config import *
 
 
 def save_df_to_csv(df: pd.DataFrame, filename: str) -> None:
@@ -21,24 +16,26 @@ def create_currencies_datasets(
         currency_codes: [str],
         date_from: str,
         date_to: str,
-        convertation_codes: [str] = ['USD']
+        convert_codes: [str] = None
 ) -> None:
 
+    if convert_codes is None:
+        convert_codes = ['USD']
+
     for currency in currency_codes:
-        for convertation in convertation_codes:
-            currency_df = pd.DataFrame()
-            currency_year_data = coinmarketcap_parser.get_currency_data(currency, date_from, date_to, convertation)
-            if currency_year_data is not None:
-                current_year_df = pd.DataFrame(currency_year_data)
-                currency_df = currency_df.append(current_year_df, ignore_index=True)
-            filename = 'data/coinmarketcap_' + currency + '_' + convertation + '_' + date_from + '_' + date_to + '.csv'
-            save_df_to_csv(currency_df, filename)
+        currency_df = pd.DataFrame()
+        currency_data = coinmarketcap_parser.get_currency_data(currency, date_from, date_to, convert_codes)
+        if currency_data is not None:
+            currency_df = currency_df.append(pd.DataFrame(currency_data), ignore_index=True)
+
+        filename = 'data/coinmarketcap_' + currency + '_' + date_from + '_' + date_to + '.csv'
+        save_df_to_csv(currency_df, filename)
 
 
 if not os.path.exists('data'):
     os.makedirs('data')
 
-create_currencies_datasets(global_currency_codes, global_date_from, global_date_to, global_convertation_codes)
+create_currencies_datasets(global_currency_codes, global_date_from, global_date_to, global_convert_codes)
 
 
 final_df = pd.DataFrame(columns=['date'])

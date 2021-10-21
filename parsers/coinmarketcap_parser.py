@@ -16,7 +16,10 @@ def get_currency_id(currency_code: str) -> int or None:
     return None
 
 
-def get_currency_data(currency_code: str, date_from: str, date_to: str, convertation: str = 'USD') -> [dict] or None:
+def get_currency_data(currency_code: str, date_from: str, date_to: str, convert_list: [str] = None) -> [dict] or None:
+    if convert_list is None:
+        convert_list = ['USD']
+
     currency_id = get_currency_id(currency_code)
 
     if currency_id is None:
@@ -25,7 +28,7 @@ def get_currency_data(currency_code: str, date_from: str, date_to: str, converta
     request_url = 'https://web-api.coinmarketcap.com/v1/cryptocurrency/ohlcv/historical?'
     request_params = {
         'id': currency_id,
-        'convert': convertation,
+        'convert': ','.join(convert_list),
         'time_start': minus_one_day(date_from),
         'time_end': date_to
     }
@@ -38,9 +41,16 @@ def get_currency_data(currency_code: str, date_from: str, date_to: str, converta
 
     result = []
     for day_data in response.json()['data']['quotes']:
-        result.append({
-            'date': day_data['time_open'].split('T')[0],
-            currency_code + '_price_' + convertation: day_data['quote'][convertation]['close']
-        })
+
+        result_dict = {
+            'date': day_data['time_open'].split('T')[0]
+        }
+
+        for convert in convert_list:
+            result_dict[currency_code + '_price_' + convert] = day_data['quote'][convert]['close']
+            result_dict[currency_code + '_volume_' + convert] = day_data['quote'][convert]['volume']
+            result_dict[currency_code + '_market_cap_' + convert] = day_data['quote'][convert]['market_cap']
+
+        result.append(result_dict)
 
     return result
