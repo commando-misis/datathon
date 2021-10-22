@@ -9,6 +9,6 @@ currency_codes_x_names_dict = {
     'BNB': 'Binance Coin',
     'USDT': 'Tether',
     'ADA': 'Cardano',
-    'XRP': 'Proton',
+    'XRP': 'Ripple',
     'SOL': 'Solana'
 }
