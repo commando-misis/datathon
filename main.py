@@ -23,6 +23,7 @@ def create_currencies_datasets(
 
     for currency in currency_codes:
         currency_df = pd.DataFrame()
+        currency_job_start_time = datetime.now()
 
         currency_data = coinmarketcap_parser.get_currency_data(currency, date_from, date_to, convert_codes)
         if currency_data is not None:
@@ -33,6 +34,7 @@ def create_currencies_datasets(
 
         filename = 'data/' + currency + '_' + date_from + '_' + date_to + '.csv'
         save_df_to_csv(currency_df, filename)
+        print(filename + ' created successfully. Elapsed time = ' + str(datetime.now() - currency_job_start_time))
 
 
 print('-' * 8 + '\nSTART\n' + '-' * 8)
@@ -61,7 +63,11 @@ for dataset_file in glob('data/*.csv'):
         tmp_df['date'] = pd.to_datetime(tmp_df['date'], format='%Y-%m-%d')
         final_df = final_df.merge(tmp_df, how='left', on='date')
 
-final_filename = 'data/final_' + global_date_from + '_' + global_date_to + '.csv'
+
+if not os.path.exists('data/result'):
+    os.makedirs('data/result')
+
+final_filename = 'data/result/final_' + global_date_from + '_' + global_date_to + '.csv'
 save_df_to_csv(final_df, final_filename)
 
 print('Merged. File ' + final_filename + ' created successfully.')

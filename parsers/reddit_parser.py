@@ -33,7 +33,6 @@ def get_reddit_mentions(currency_code: str, date_from: str, date_to: str) -> [di
         sleep(0.5)
 
         if response.status_code != 200:
-            print(response.status_code)
             result.append({
                 'date': date_str,
                 currency_code + '_reddit_mentions': None
