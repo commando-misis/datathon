@@ -3,7 +3,7 @@ import requests
 from urllib.parse import urlencode
 from datetime import datetime, timedelta
 from time import sleep
-from parsers.utils import get_days_count, add_one_day
+from parsers.utils import get_dates_days_diff, add_one_day
 from config import currency_codes_x_names_dict
 
 
@@ -13,7 +13,7 @@ def get_reddit_mentions(currency_code: str, date_from: str, date_to: str) -> [di
     # iterations by day
     result = []
     for date in (datetime.strptime(date_from, '%Y-%m-%d') + timedelta(days)
-                 for days in range(get_days_count(date_from, date_to))):
+                 for days in range(get_dates_days_diff(date_from, date_to))):
 
         date_str = date.strftime('%Y-%m-%d')
 

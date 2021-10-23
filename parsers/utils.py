@@ -17,6 +17,6 @@ def add_one_day(date: str) -> str:
     return (datetime.strptime(date, '%Y-%m-%d') + timedelta(days=1)).strftime('%Y-%m-%d')
 
 
-def get_days_count(date_from: str, date_to: str) -> int:
+def get_dates_days_diff(date_from: str, date_to: str) -> int:
     dates_diff = datetime.strptime(date_to, '%Y-%m-%d') - datetime.strptime(date_from, '%Y-%m-%d')
     return dates_diff.days + 1

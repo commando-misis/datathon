@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 
-from parsers import coinmarketcap_parser, reddit_parser
+from parsers import coinmarketcap_parser, reddit_parser, trends_parser
 from glob import glob
 from datetime import datetime, timedelta
 from config import *
@@ -31,6 +31,9 @@ def create_currencies_datasets(
 
         reddit_mentions_data = reddit_parser.get_reddit_mentions(currency, date_from, date_to)
         currency_df = currency_df.merge(pd.DataFrame(reddit_mentions_data), how='left', on='date')
+
+        google_trends_df = trends_parser.get_trends_values(currency, date_from, date_to)
+        currency_df = currency_df.merge(google_trends_df, how='left', on='date')
 
         filename = 'data/' + currency + '_' + date_from + '_' + date_to + '.csv'
         save_df_to_csv(currency_df, filename)
